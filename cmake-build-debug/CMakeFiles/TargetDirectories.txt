@@ -1,0 +1,6 @@
+/Users/mrmkfadel/Desktop/CO5625 202425 CLion Apple Bugfix/cmake-build-debug/CMakeFiles/Debug.dir
+/Users/mrmkfadel/Desktop/CO5625 202425 CLion Apple Bugfix/cmake-build-debug/CMakeFiles/Feedback.dir
+/Users/mrmkfadel/Desktop/CO5625 202425 CLion Apple Bugfix/cmake-build-debug/CMakeFiles/Submit.dir
+/Users/mrmkfadel/Desktop/CO5625 202425 CLion Apple Bugfix/cmake-build-debug/CMakeFiles/Sketchbook.dir
+/Users/mrmkfadel/Desktop/CO5625 202425 CLion Apple Bugfix/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/mrmkfadel/Desktop/CO5625 202425 CLion Apple Bugfix/cmake-build-debug/CMakeFiles/rebuild_cache.dir
