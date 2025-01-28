@@ -1,0 +1,195 @@
+
+--------------------------------------------Prototype.h--------------------------------------------
+
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
+
+
+
+/*
+	O notation: fill in your time complexities here
+		-	Constructor:	O(n)  
+		-	getCity:		O(1) on average.
+		-	checkCity:		O(1) on average.
+		-	markUsed:		O(1)
+		-	restart:		O(1)
+*/
+
+
+class Prototype {
+private:
+    std::unordered_map<char, std::vector<std::string>> cityMap;
+    std::unordered_set<std::string> usedCities;
+
+public:
+    // Constructor
+    Prototype(const std::string& filename);
+
+    // Get a valid city starting with the provided letter
+    std::string getCity(char firstLetter);
+
+    // Check if a city is valid and unused
+    bool checkCity(const std::string& city);
+
+    // Mark a city as used
+    void markUsed(const std::string& city);
+
+    // Reset the used cities
+    void restart();
+};
+
+--------------------------------------------Prototype.cpp--------------------------------------------
+
+#include "Prototype.h"
+
+// Constructor: Reads the city names from the given file and stores them in the cityMap
+Prototype::Prototype(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string city;
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    // Read and populate the city map
+    while (std::getline(file, city)) {
+        char firstLetter = std::tolower(city[0]);
+        cityMap[firstLetter].push_back(city);
+    }
+
+    file.close();
+}
+
+// Returns a valid, unused city that starts with the given letter
+std::string Prototype::getCity(char firstLetter) {
+    firstLetter = std::tolower(firstLetter);
+
+    if (cityMap.find(firstLetter) != cityMap.end()) {
+        for (auto& city : cityMap[firstLetter]) {
+            if (usedCities.find(city) == usedCities.end()) {
+                return city;
+            }
+        }
+    }
+
+    return "";  // If no unused city is found, return an empty string
+}
+
+// Verifies if the city exists and is unused
+bool Prototype::checkCity(const std::string& city) {
+    char firstLetter = std::tolower(city[0]);
+
+    return cityMap.find(firstLetter) != cityMap.end() &&
+           std::find(cityMap[firstLetter].begin(), cityMap[firstLetter].end(), city) != cityMap[firstLetter].end() &&
+           usedCities.find(city) == usedCities.end();
+}
+
+// Marks the city as used by inserting it into the usedCities set
+void Prototype::markUsed(const std::string& city) {
+    usedCities.insert(city);
+}
+
+// Resets all cities to unused by clearing the usedCities set
+void Prototype::restart() {
+    usedCities.clear();
+}
+
+--------------------------------------------Simulator.h--------------------------------------------
+
+#pragma once
+#include "Prototype.h"
+#include <iostream>
+
+class Simulator {
+public:
+    void startGame();
+};
+
+--------------------------------------------Simulator.cpp--------------------------------------------
+
+#include "Simulator.h"
+#include "Competition.h"
+
+void Simulator::startGame() {
+    Competition competition;
+    std::string currentCity = "Paris";  // Example city to start the game
+    std::cout << "Starting game with city: " << currentCity << std::endl;
+
+}
+
+--------------------------------------------Competition.h--------------------------------------------
+
+#pragma once
+#include "Prototype.h"
+
+#define Competition_class Prototype  //change to Competition once you've implemented your Competition class, defaults to Prototype
+
+class Competition : public Competition_class {
+public:
+    // Constructor declaration with noexcept to match the definition in the cpp file
+    Competition() noexcept;
+    
+    // You can add competition-specific methods and functionality here
+};
+
+--------------------------------------------Competition.cpp--------------------------------------------
+
+#include "Competition.h"
+#include <iostream>
+
+
+Competition::Competition() noexcept : Prototype("Cities.txt") {
+}
+
+--------------------------------------------main.cpp--------------------------------------------
+
+#include "Simulator.h"
+
+int main() {
+    Simulator simulator;
+    simulator.startGame();  // Start the game simulation
+
+    return 0;
+}
+
+--------------------------------------------Sketchbook.cpp--------------------------------------------
+
+#include "Prototype.h"
+#include <iostream>
+
+int main() {
+    // Test case 1: Create a Prototype instance from a file (example: cities.txt)
+    Prototype game("cities.txt");
+
+    // Test case 2: Get a city that starts with a specific letter
+    std::string city = game.getCity('p');  // For example, a city starting with 'p'
+    std::cout << "City starting with 'p': " << city << std::endl;
+
+    // Test case 3: Check if a city is valid and unused
+    bool isValid = game.checkCity("Paris");
+    std::cout << "Is Paris a valid and unused city? " << (isValid ? "Yes" : "No") << std::endl;
+
+    // Test case 4: Mark a city as used and try to get it again
+    game.markUsed("Paris");
+    isValid = game.checkCity("Paris");
+    std::cout << "Is Paris a valid and unused city after marking it as used? " 
+              << (isValid ? "Yes" : "No") << std::endl;
+
+    // Test case 5: Try to get another city starting with the same letter
+    city = game.getCity('p');
+    std::cout << "Another city starting with 'p': " << city << std::endl;
+
+    // Test case 6: Restart the game (mark all cities as unused)
+    game.restart();
+    isValid = game.checkCity("Paris");
+    std::cout << "Is Paris a valid city after restarting? " << (isValid ? "Yes" : "No") << std::endl;
+
+    return 0;
+}
